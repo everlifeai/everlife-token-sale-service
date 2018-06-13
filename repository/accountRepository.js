@@ -1,22 +1,27 @@
 const User = require('./../models/user');
 
-module.exports.updateCA = async (userId, contributionAddress) => {
+module.exports.payment = async (userId, contributionAddress, xlmAmount) => {
     await User.findByIdAndUpdate(
         userId,
         {
-            ca: contributionAddress
+            payment:{
+                ca: contributionAddress,
+                xlmAmount: xlmAmount
+            }
         }
     )
     return;
 }
 
-module.exports.storeContributionTrx = async (userId, XDR2, XDR3) => {
+module.exports.storeContributionTrx = async (userId, XDR2, XDR3, ca2, xlmAmount) => {
     await User.findByIdAndUpdate(
         userId,
         {
             contribution: {
                 trx2: XDR2,
-                trx3: XDR3
+                trx3: XDR3,
+                ca2: ca2,
+                xlmAmount: xlmAmount
             }
         }
     )

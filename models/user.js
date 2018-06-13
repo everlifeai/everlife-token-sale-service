@@ -1,17 +1,22 @@
 var mongoose = require('mongoose');
 const { UserError } = require('./../errors/customErrors');
 
-var userSchema = new mongoose.Schema({
+const contribution = new mongoose.Schema({
+    trx2: { type: String, default: null },
+    trx3: { type: String, default: null },
+    ca2: { type: String, default: null },
+    xlmAmount: { type: Number, default: 0 },
+},
+    { timestamps: true }
+);
+
+const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     whitelist: { type: Boolean, default: false },
     kyc: { type: Boolean, default: false },
-    ca: { type: String, default: null },
-    contribution: {
-        trx2: { type: String, default: null },
-        trx3: { type: String, default: null }
-    }
+    contribution: contribution
 },
     { timestamps: true }
 );
