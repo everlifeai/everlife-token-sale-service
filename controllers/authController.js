@@ -31,16 +31,11 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
     try {
         const user = await authRepository.getUser(email);
         if (!user) {
-            next(new UserError("User does not exist"));
-            return;
+            throw new UserError("User does not exist", 400);
         }
         if (await authService.comparePassword(password, user.password)) {
-            try {
-                var accessToken = await getAccessToken(user);
-            } catch (error) {
-                next(error);
-            }
-            const response = {
+            var accessToken = await getAccessToken(user);
+            var response = {
                 user: {
                     name: user.name,
                     email: user.email,
@@ -50,16 +45,15 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
                 },
                 accessToken
             }
-            res.send(response);
         }
         else {
-            res.status(401).send({ "error": "Email or password do not match" });
+            throw new UserError("Email or password do not match", 400);
         }
     } catch (error) {
         next(error);
         return;
     }
-
+    res.send(response);
 });
 
 async function getAccessToken(user) {
