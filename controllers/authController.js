@@ -41,7 +41,7 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
                     email: user.email,
                     kyc: user.kyc,
                     whitelist: user.whitelist,
-                    ca: user.ca,
+                    contributions: user.contributions,
                 },
                 accessToken
             }

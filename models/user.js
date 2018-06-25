@@ -2,8 +2,9 @@ var mongoose = require('mongoose');
 const { UserError } = require('./../errors/customErrors');
 
 const contribution = new mongoose.Schema({
-    trx2: { type: String, default: null },
-    trx3: { type: String, default: null },
+    xdr1: { type: String, default: null },
+    xdr2: { type: String, default: null },
+    xdr3: { type: String, default: null },
     ca2: { type: String, default: null },
     xlmAmount: { type: Number, default: 0 },
 },
@@ -16,7 +17,10 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     whitelist: { type: Boolean, default: false },
     kyc: { type: Boolean, default: false },
-    contribution: contribution
+    contributions: [{
+        type: contribution,
+        default: contribution
+    }]
 },
     { timestamps: true }
 );
