@@ -14,7 +14,7 @@ module.exports.payment = async (userId, contributionAddress, xlmAmount) => {
 }
 
 module.exports.storeContributionTrx = async (userId, XDR1, XDR2, XDR3, ca2, xlmAmount) => {
-    await User.findByIdAndUpdate(
+    const user = await User.findByIdAndUpdate(
         userId,
         {
             "$push": {
@@ -26,9 +26,12 @@ module.exports.storeContributionTrx = async (userId, XDR1, XDR2, XDR3, ca2, xlmA
                     xlmAmount: xlmAmount
                 }
             }
+        },
+        {
+            new: true
         }
     )
-    return;
+    return user;
 }
 
 module.exports.getUserProfile = async (userId) => {

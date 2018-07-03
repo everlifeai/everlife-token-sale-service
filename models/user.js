@@ -14,6 +14,8 @@ const contribution = new mongoose.Schema({
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
+    birthdate: { type: Date, required: true },
+    gender: { type: String, required: true },
     password: { type: String, required: true },
     whitelist: { type: Boolean, default: false },
     kyc: { type: Boolean, default: false },

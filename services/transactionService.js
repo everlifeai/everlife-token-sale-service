@@ -3,7 +3,7 @@ var StellarSdk = require('stellar-sdk')
 const config = require('../config/config');
 
 var server;
-if(config.server.isDevelopment){
+if (config.server.isDevelopment) {
     StellarSdk.Network.useTestNetwork();
     server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 }
@@ -25,7 +25,7 @@ module.exports.allowTrust = async (userPublic) => {
     return result;
 }
 
-module.exports.contribute = async (XDR1, XDR2, XDR3) => {
+module.exports.signTransactionsByDA = async (XDR1, XDR2, XDR3) => {
     const trx1 = new StellarSdk.Transaction(XDR1);
     const trx2 = new StellarSdk.Transaction(XDR2);
     const trx3 = new StellarSdk.Transaction(XDR3);
@@ -34,12 +34,18 @@ module.exports.contribute = async (XDR1, XDR2, XDR3) => {
     trx2.sign(distKeypair);
     trx3.sign(distKeypair);
 
-    await server.submitTransaction(trx1);
     return {
         signedXDR1: trx1.toEnvelope().toXDR().toString("base64"),
         signedXDR2: trx2.toEnvelope().toXDR().toString("base64"),
         signedXDR3: trx3.toEnvelope().toXDR().toString("base64")
     };
+}
+
+module.exports.submitXdr = async (XDR) => {
+    const trx = new StellarSdk.Transaction(XDR);
+    var result = await server.submitTransaction(trx);
+
+    return result;
 }
 
 module.exports.fundTestAccount = async (userPublic) => {
