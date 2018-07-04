@@ -1,18 +1,9 @@
 const User = require('./../models/user');
 
-module.exports.payment = async (userId, contributionAddress, xlmAmount) => {
-    await User.findByIdAndUpdate(
-        userId,
-        {
-            payment: {
-                ca: contributionAddress,
-                xlmAmount: xlmAmount
-            }
-        }
-    )
-    return;
-}
-
+/*      outcome/
+ * Save a new contribution into the user object and return the latest
+ * contribution.
+ */
 module.exports.storeContributionTrx = async (userId, XDR1, XDR2, XDR3, ca2, xlmAmount) => {
     const user = await User.findByIdAndUpdate(
         userId,

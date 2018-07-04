@@ -5,16 +5,32 @@ const transactionService = require('../services/transactionService');
 const accountRepo = require('../repository/accountRepository');
 const transactionRepo = require('../repository/transactionRepository');
 const Constants = require('../models/constants');
-// validation schema
 const contributionTrxSchema = require('../validators/contributionTrxSchema');
 
+/*
+ *      problem/
+ * We would like to enable people to buy tokens during the ico
+ *
+ *      way/
+ * The user creates three transactions and hands them to us:
+ *   1. a purchase transaction to buy the tokens at the current price
+ *   2. a success transaction that transfers the tokens to his account
+ *   on ico success
+ *   3. a failure transaction that restores his payment back to his
+ *   account
+ * We sign these transactions with our "Token Distribution Account",
+ * submit the purchase transaction so we lock in the user's payment, and
+ * hold the other two transactions until the ico completes.
+ */
 router.post('/contribute', bodyValidator(contributionTrxSchema), async (req, res, next) => {
     const { id: userId } = req.user;
-    const { XDR1, XDR2, XDR3, ca2, xlmAmount } = req.body;
+    let { paymentTxn, icoSuccessTxn, icoFailTxn, ca2, xlmAmount } = req.body;
     try {
+        paymentTxn = await transactionService.signTransactionByDA(paymentTxn);
+        icoSuccessTxn = await transactionService.signTransactionByDA(icoSuccessTxn);
+        icoFailTxn = await transactionService.signTransactionByDA(icoFailTxn);
 
-        var { signedXDR1, signedXDR2, signedXDR3 } = await transactionService.signTransactionsByDA(XDR1, XDR2, XDR3);
-        var user = await accountRepo.storeContributionTrx(userId, signedXDR1, signedXDR2, signedXDR3, ca2, xlmAmount);
+        var user = await accountRepo.storeContributionTrx(userId, paymentTxn, icoSuccessTxn, icoFailTxn, ca2, xlmAmount);
     } catch (error) {
         next(error);
         return;
@@ -29,15 +45,17 @@ router.post('/contribute', bodyValidator(contributionTrxSchema), async (req, res
     res.sendStatus(204);
 });
 
+/*      outcome/
+ * Returns the user profile for the given user id
+ */
 router.get('/profile', async (req, res, next) => {
     const { id: userId } = req.user;
     try {
         var userDetails = await accountRepo.getUserProfile(userId);
     } catch (error) {
         next(error);
-        return;
     }
-    res.send({ user: userDetails })
+    res.send({ user: userDetails });
 });
 
 module.exports = router;
