@@ -21,6 +21,9 @@ const contributionTrxSchema = require('../validators/contributionTrxSchema');
  * We sign these transactions with our "Token Distribution Account",
  * submit the purchase transaction so we lock in the user's payment, and
  * hold the other two transactions until the ico completes.
+ *
+ * TODO: Shouldn't we check for offer price? Transaction validation may
+ * be needed.
  */
 router.post('/contribute', bodyValidator(contributionTrxSchema), async (req, res, next) => {
     const { id: userId } = req.user;
