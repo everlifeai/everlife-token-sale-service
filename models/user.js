@@ -39,6 +39,7 @@ var User = mongoose.model('User', userSchema);
  * any user we first validate that there is not already a user with the
  * given email in the database.
  *
+ * TODO: MY@GMAIL.COM and my@gmail.com should match the same user
  */
 userSchema.pre('save', async function (next) {
     const user = await User.findOne({ email: this.email });
