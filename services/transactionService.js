@@ -2,6 +2,7 @@ var StellarSdk = require('stellar-sdk')
 
 const config = require('../config/config');
 
+// TODO: Get test/production environments to work
 var server;
 if (config.server.isDevelopment) {
     StellarSdk.Network.useTestNetwork();
@@ -10,6 +11,17 @@ if (config.server.isDevelopment) {
 
 const issuingKeypair = StellarSdk.Keypair.fromSecret(config.stellar.issuingSecret);
 const distKeypair = StellarSdk.Keypair.fromSecret(config.stellar.distSecret);
+
+/*      outcome/
+ * Return the transaction after signing by the Distribution Account
+ */
+module.exports.signTransactionByDA = async (xdr) => {
+    const trx = new StellarSdk.Transaction(xdr);
+    trx.sign(distKeypair);
+    return trx.toEnvelope().toXDR().toString("base64"),
+}
+
+
 
 module.exports.allowTrust = async (userPublic) => {
     const account = await server.loadAccount(config.stellar.issuingPublic);
@@ -23,22 +35,6 @@ module.exports.allowTrust = async (userPublic) => {
     transaction.sign(issuingKeypair);
     const result = await server.submitTransaction(transaction);
     return result;
-}
-
-module.exports.signTransactionsByDA = async (XDR1, XDR2, XDR3) => {
-    const trx1 = new StellarSdk.Transaction(XDR1);
-    const trx2 = new StellarSdk.Transaction(XDR2);
-    const trx3 = new StellarSdk.Transaction(XDR3);
-
-    trx1.sign(distKeypair);
-    trx2.sign(distKeypair);
-    trx3.sign(distKeypair);
-
-    return {
-        signedXDR1: trx1.toEnvelope().toXDR().toString("base64"),
-        signedXDR2: trx2.toEnvelope().toXDR().toString("base64"),
-        signedXDR3: trx3.toEnvelope().toXDR().toString("base64")
-    };
 }
 
 module.exports.submitXdr = async (XDR) => {

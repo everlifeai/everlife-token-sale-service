@@ -12,7 +12,7 @@ const schema = Joi.object({
 const { error, value: envVars } = Joi.validate(process.env, schema)
 
 if (error) {
-    throw new Error(`Stellar validation error ${error}`);
+    throw new Error(`Stellar environment variables incorrect ${error}`);
 }
 
 const config = {
