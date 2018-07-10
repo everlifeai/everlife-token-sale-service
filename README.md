@@ -1,14 +1,13 @@
 # everlife token sale service
 
-> everlife token sale service
-
+> This is the EverLife.AI Token Sale Backend Service Module. The server side logic for Token Sale resides here.
 ## Deploy Setup
 
 ### requirement
 
 1. Nodejs version >= 8.11.1
 2. npm - latest
-3. mongodb - latest
+3. MongoDB 4.0.
 
 ### environment variables
 
