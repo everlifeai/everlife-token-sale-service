@@ -16,7 +16,7 @@ if (config.server.isDevelopment) {
 }
 
 if (config.server.isProduction) {
-  mongoose.connect(config.db.connectionString, { useMongoClient: true });
+  mongoose.connect(config.db.connectionString);
 }
 
 /**
