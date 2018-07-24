@@ -18,7 +18,7 @@ const distKeypair = StellarSdk.Keypair.fromSecret(config.stellar.distSecret);
 module.exports.signTransactionByDA = async (xdr) => {
     const trx = new StellarSdk.Transaction(xdr);
     trx.sign(distKeypair);
-    return trx.toEnvelope().toXDR().toString("base64"),
+    return trx.toEnvelope().toXDR().toString("base64")
 }
 
 
