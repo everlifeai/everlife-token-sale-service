@@ -17,13 +17,13 @@ router.post('/register', bodyValidator(userRegisterSchema), async (req, res, nex
         user.password = passwordHash;
         await authRepository.createUser(user);
 
-        const userDetails = await authRepository.getUser(user.email);
+        var userDetails = await authRepository.getUser(user.email);
         var accessToken = await getAccessToken(userDetails);
     } catch (error) {
         next(error);
         return;
     }
-    res.send({ accessToken });
+    res.send({ accessToken, user: userDetails });
 });
 
 router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => {
