@@ -13,6 +13,12 @@ const authMiddleware = require('./middlewares/authMiddleware');
 const authController = require('./controllers/authController');
 const accountController = require('./controllers/accountController');
 
+/*   problem/
+ * During development we need to see the request/responses
+ *   way/
+ * the standard 'dev' logger shows all requests/responses in development
+ * environment - color coded with errors
+ */
 app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
