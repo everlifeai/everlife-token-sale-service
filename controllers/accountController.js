@@ -27,11 +27,13 @@ const contributionTrxSchema = require('../validators/contributionTrxSchema');
  */
 router.post('/contribute', bodyValidator(contributionTrxSchema), async (req, res, next) => {
     const { id: userId } = req.user;
-    let { paymentTxn, icoSuccessTxn, icoFailTxn, ca2, xlmAmount } = req.body;
+    let { XDR1, XDR2, XDR3, ca2, xlmAmount } = req.body;
     try {
-        paymentTxn = await transactionService.signTransactionByDA(paymentTxn);
-        icoSuccessTxn = await transactionService.signTransactionByDA(icoSuccessTxn);
-        icoFailTxn = await transactionService.signTransactionByDA(icoFailTxn);
+        [paymentTxn, icoSuccessTxn, icoFailTxn] = await Promise.all([
+            transactionService.signTransactionByDA(XDR1),
+            transactionService.signTransactionByDA(XDR2),
+            transactionService.signTransactionByDA(XDR3)
+        ])
 
         var user = await accountRepo.storeContributionTrx(userId, paymentTxn, icoSuccessTxn, icoFailTxn, ca2, xlmAmount);
     } catch (error) {
@@ -39,7 +41,7 @@ router.post('/contribute', bodyValidator(contributionTrxSchema), async (req, res
         return;
     }
     const paymentId = user.contributions[user.contributions.length-1]._id;
-    transactionService.submitXdr(signedXDR1).then(function(result){
+    transactionService.submitXdr(paymentTxn).then(function(result){
         transactionRepo.storeTransaction(userId, paymentId, null, Constants.SUCCESS, result.hash);
     }).catch(function(error){
         transactionRepo.storeTransaction(userId, paymentId, error.data.extras.result_codes.transaction, Constants.FAILED, null);
