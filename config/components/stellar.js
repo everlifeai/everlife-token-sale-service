@@ -6,6 +6,7 @@ const schema = Joi.object({
     ISSUING_SECRET: Joi.string().required(),
     DIST_PUBLIC: Joi.string().required(),
     DIST_SECRET: Joi.string().required(),
+    STELLAR_ENV: Joi.string().required(),
 }).unknown()
     .required()
 
@@ -21,6 +22,8 @@ const config = {
     issuingSecret: envVars.ISSUING_SECRET,
     distPublic: envVars.DIST_PUBLIC,
     distSecret: envVars.DIST_SECRET,
+    isDevelopment: envVars.STELLAR_ENV === 'development',
+    isProduction: envVars.STELLAR_ENV === 'production',
 }
 
 module.exports = config;

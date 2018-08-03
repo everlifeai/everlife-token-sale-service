@@ -4,7 +4,7 @@ const config = require('../config/config');
 
 // TODO: Get test/production environments to work
 var server;
-if (config.server.isDevelopment) {
+if (config.stellar.isDevelopment) {
     StellarSdk.Network.useTestNetwork();
     server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
 }
