@@ -6,6 +6,7 @@ const schema = Joi.object({
     gender: Joi.string().allow(['male', 'female']).required(),
     birthdate: Joi.date().required(),
     password: Joi.string().required(),
+    reCaptchaResponse: Joi.string().required(),
 });
 
 module.exports = schema;

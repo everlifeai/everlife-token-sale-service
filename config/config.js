@@ -2,7 +2,7 @@ const stellar = require('./components/stellar');
 const token = require('./components/token');
 const server = require('./components/server');
 const db = require('./components/db');
-
+const gCaptcha = require('./components/gCaptcha');
 
 /*      outcome/
  * Load the configuration for the various components from the
@@ -12,5 +12,6 @@ module.exports = {
     stellar,
     token,
     server,
-    db
+    db,
+    gCaptcha
 }
