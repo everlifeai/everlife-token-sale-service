@@ -12,6 +12,7 @@ const authMiddleware = require('./middlewares/authMiddleware');
 // Controllers
 const authController = require('./controllers/authController');
 const accountController = require('./controllers/accountController');
+const kycController = require('./controllers/kycController');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -21,11 +22,11 @@ app.use(cors());
 
 app.use('/api/auth', authController);
 
-
 app.use(authMiddleware.verifyToken);
 
 // Authorized API
 app.use('/api/account', accountController);
+app.use('/api/kyc', kycController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
