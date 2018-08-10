@@ -12,6 +12,7 @@ const authMiddleware = require('./middlewares/authMiddleware');
 // Controllers
 const authController = require('./controllers/authController');
 const accountController = require('./controllers/accountController');
+const kycController = require('./controllers/kycController');
 
 /*   problem/
  * During development we need to see the request/responses
@@ -30,6 +31,7 @@ app.use('/api/auth', authController);
 // Authorized API
 app.use(authMiddleware.verifyToken);
 app.use('/api/account', accountController);
+app.use('/api/kyc', kycController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

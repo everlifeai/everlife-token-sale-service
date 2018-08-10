@@ -19,6 +19,11 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true },
     whitelist: { type: Boolean, default: false },
     kyc: { type: Boolean, default: false },
+    kycDocs: {
+        document1: { type: String, default: null },
+        document2: { type: String, default: null }
+    },
+    idmStatus: {type: String, default: null},
     contributions: [{
         type: contribution,
         default: contribution

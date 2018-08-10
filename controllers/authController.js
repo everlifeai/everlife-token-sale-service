@@ -49,6 +49,8 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
                     email: user.email,
                     kyc: user.kyc,
                     whitelist: user.whitelist,
+                    kycDocs: user.kycDocs,
+                    idmStatus: user.idmStatus,
                     contributions: user.contributions,
                 },
                 accessToken
@@ -70,6 +72,7 @@ async function getAccessToken(user) {
         email: user.email,
         whitelist: user.whitelist,
         kyc: user.kyc,
+        idmStatus: user.idmStatus,
     }
     const token = await authService.generateAccessToken(tokenData);
     return token;
