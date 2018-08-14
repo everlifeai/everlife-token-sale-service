@@ -33,10 +33,10 @@ router.post('/register', bodyValidator(userRegisterSchema), async (req, res, nex
 router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => {
     const { email, password, reCaptchaResponse } = req.body;
     try {
-        const captchaStatus = await captcha.isCaptchaSuccess(reCaptchaResponse);
-        if(!captchaStatus){
-            throw new UserError("Captcha invalid", 400);
-        }
+        // const captchaStatus = await captcha.isCaptchaSuccess(reCaptchaResponse);
+        // if(!captchaStatus){
+        //     throw new UserError("Captcha invalid", 400);
+        // }
         const user = await authRepository.getUser(email);
         if (!user) {
             throw new UserError("User does not exist", 400);
