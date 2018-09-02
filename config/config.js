@@ -4,6 +4,7 @@ const server = require('./components/server');
 const db = require('./components/db');
 const aws = require('./components/aws');
 const gCaptcha = require('./components/gCaptcha');
+const idm = require('./components/idm');
 
 /*      outcome/
  * Load the configuration for the various components from the
@@ -16,4 +17,5 @@ module.exports = {
     db,
     aws,
     gCaptcha,
-}
+    idm
+};
