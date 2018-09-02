@@ -49,14 +49,15 @@ module.exports.addKycDocuments = async (userId, document1Id, document2Id) => {
     )
 }
 
-module.exports.storeIDMStatus = async (userId, idmResponse) => {
+module.exports.storeIDMStatus = async (userId, idmStatus) => {
+    console.log(`[storeIDMStatus] ${userId}: ${idmStatus}`);
     await User.findByIdAndUpdate(
         userId,
         {
-            "idmStatus": idmResponse
+            "idmStatus": idmStatus
         }
     );
-}
+};
 
 module.exports.storeKycDocs = async (userId, document1, document2) => {
     await User.findByIdAndUpdate(
