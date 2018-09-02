@@ -29,11 +29,12 @@ router.post('/saveKycDocs', bodyValidator(storeKycDocsSchema), async (req, res, 
 
 router.post('/idmDecision', async (req, res, next) => {
     const userId = req.user.id;
-    const { idmResponse, kycResult } = req.body;
+    const { idmResponse } = req.body;
     try {
-        await idmService.verifySignature(idmResponse);
-        await accountRepository.storeIDMStatus(userId, kycResult);
+        const verifiedIdmResponse = await idmService.verifySignature(idmResponse);
+        await accountRepository.storeIDMStatus(userId, verifiedIdmResponse.kyc_result);
     } catch (error) {
+        console.log("[post:/idmDecision] Failed to verify JTW", error);
         next(error);
         return;
     }
