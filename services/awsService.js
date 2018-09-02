@@ -10,7 +10,7 @@ aws.config.update({
     region: config.aws.region,
     signatureVersion: 'v4'
 });
-var s3 = new aws.S3();
+var s3 = new aws.S3({endpoint: config.aws.endpoint});
 
 var generateFileName = function (req, file) {
     return shortid.generate() + file.originalname.substr(file.originalname.lastIndexOf('.'));
