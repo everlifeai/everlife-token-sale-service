@@ -31,3 +31,7 @@ npm-debug.log
 
 .env
 .DS_Store
+
+# Ignore IntelliJ Config Files
+*.iml
+/.idea
