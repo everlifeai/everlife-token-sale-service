@@ -33,6 +33,8 @@ router.post('/idmDecision', async (req, res, next) => {
     try {
         const verifiedIdmResponse = await idmService.verifySignature(idmResponse);
         await accountRepository.storeIDMStatus(userId, verifiedIdmResponse.kyc_result);
+        await accountRepository.storeIDMDetails(userId, JSON.stringify(verifiedIdmResponse));
+
     } catch (error) {
         console.log("[post:/idmDecision] Failed to verify JTW", error);
         next(error);

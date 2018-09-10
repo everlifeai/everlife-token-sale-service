@@ -38,6 +38,8 @@ module.exports.getUserProfile = async (userId) => {
             isAdmin: 1,
             isVerifier: 1,
             isActive: 1,
+            kycStatus: 1,
+            idmDetails:1
         });
     return userDetails;
 }
@@ -61,6 +63,17 @@ module.exports.storeIDMStatus = async (userId, idmStatus) => {
         }
     );
 };
+
+module.exports.storeIDMDetails = async (userId, verifiedIdmResponse) => {
+  console.log(`[storeIDMResponse] ${userId}: ${verifiedIdmResponse}`);
+    await User.findByIdAndUpdate(
+        userId,
+        {
+            "idmDetails":verifiedIdmResponse
+        }
+    );
+};
+
 
 module.exports.storeKycDocs = async (userId, document1, document2) => {
     await User.findByIdAndUpdate(

@@ -32,6 +32,8 @@ const userSchema = new mongoose.Schema({
     isAdmin: { type: Boolean, default: false },
     isVerifier: { type: Boolean, default: false },
     isActive: { type: Boolean, default: false },
+    kycStatus: {type: String, default: null},
+    idmDetails: {type: String, default: null}
 },
     { timestamps: true }
 );

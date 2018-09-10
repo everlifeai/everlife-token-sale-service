@@ -55,6 +55,8 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
                     isAdmin: user.isAdmin,
                     isVerifier: user.isVerifier,
                     isActive: user.isActive,
+                    kycStatus: user.kycStatus,
+                    idmDetails:user.idmDetails
                 },
                 accessToken
             }
