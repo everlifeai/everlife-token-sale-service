@@ -28,7 +28,10 @@ const userSchema = new mongoose.Schema({
     contributions: [{
         type: contribution,
         default: contribution
-    }]
+    }],
+    isAdmin: { type: Boolean, default: false },
+    isVerifier: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: false },
 },
     { timestamps: true }
 );

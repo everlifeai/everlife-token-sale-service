@@ -34,7 +34,10 @@ module.exports.getUserProfile = async (userId) => {
             whitelist: 1,
             kyc: 1,
             idmStatus: 1,
-            kycDocs: 1
+            kycDocs: 1,
+            isAdmin: 1,
+            isVerifier: 1,
+            isActive: 1,
         });
     return userDetails;
 }
