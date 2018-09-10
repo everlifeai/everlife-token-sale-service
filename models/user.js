@@ -15,8 +15,8 @@ const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     phone: { type: String, required: false },
-    birthdate: { type: Date, required: true },
-    gender: { type: String, required: true },
+    birthdate: { type: Date, required: false },
+    gender: { type: String, required: false },
     password: { type: String, required: true },
     whitelist: { type: Boolean, default: false },
     kyc: { type: Boolean, default: false },
@@ -28,7 +28,12 @@ const userSchema = new mongoose.Schema({
     contributions: [{
         type: contribution,
         default: contribution
-    }]
+    }],
+    isAdmin: { type: Boolean, default: false },
+    isVerifier: { type: Boolean, default: false },
+    isActive: { type: Boolean, default: false },
+    kycStatus: {type: String, default: null},
+    idmDetails: {type: String, default: null}
 },
     { timestamps: true }
 );
