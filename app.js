@@ -32,6 +32,7 @@ app.use('/api/auth', authController);
 app.use(authMiddleware.verifyToken);
 app.use('/api/account', accountController);
 app.use('/api/kyc', kycController);
+app.use('api/kyc/getUsers', kycController);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {

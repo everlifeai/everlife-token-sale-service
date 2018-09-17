@@ -43,4 +43,13 @@ router.post('/idmDecision', async (req, res, next) => {
     res.sendStatus(204);
 });
 
+router.get('/getUsers',  async (req, res, next) => {
+    try {
+      const response =   await accountRepository.getUserList();
+     res.json(response);
+    } catch (error) {
+        next(error);
+        return;
+    }
+});
 module.exports = router;
