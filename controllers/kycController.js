@@ -43,4 +43,26 @@ router.post('/idmDecision', async (req, res, next) => {
     res.sendStatus(204);
 });
 
+router.get('/getUsers',  async (req, res, next) => {
+    try {
+      const response =   await accountRepository.getUserList();
+     res.json(response);
+    } catch (error) {
+        next(error);
+        return;
+    }
+});
+
+router.post('/kycStatus', async (req, res, next) => {
+  const userId = req.body.user_id;
+  const kycStatus = req.body.kycStatus;
+  try {
+      const response = await accountRepository.storeKycStatus(userId, kycStatus);
+      res.json(response);
+  } catch (error) {
+      next(error);
+  }
+});
+
+
 module.exports = router;

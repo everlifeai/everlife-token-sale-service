@@ -85,4 +85,24 @@ module.exports.storeKycDocs = async (userId, document1, document2) => {
           }
         }
     )
-}
+};
+
+module.exports.getUserList = async function () {
+  return await User.find({isVerifier: false,isAdmin:false,kycStatus: {$nin: ["ACCEPT", "REJECT"]}}, function(err, user) {
+      if (err)
+      {
+          console.log(err);
+      }
+      return user;
+   });
+};
+
+module.exports.storeKycStatus = async (userId, kycStatus) => {
+  console.log(`[storeKycStatus] ${userId}: ${kycStatus}`);
+    await User.findByIdAndUpdate(
+        userId,
+        {
+            "kycStatus":kycStatus
+        }
+    );
+};
