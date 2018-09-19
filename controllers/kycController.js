@@ -52,4 +52,17 @@ router.get('/getUsers',  async (req, res, next) => {
         return;
     }
 });
+
+router.post('/kycStatus', async (req, res, next) => {
+  const userId = req.body.user_id;
+  const kycStatus = req.body.kycStatus;
+  try {
+      const response = await accountRepository.storeKycStatus(userId, kycStatus);
+      res.json(response);
+  } catch (error) {
+      next(error);
+  }
+});
+
+
 module.exports = router;
