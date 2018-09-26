@@ -9,35 +9,56 @@ module.exports.storePurchase = async (userId, ever_expected, payment_system, cur
     await user.save();
 };
 
+module.exports.getUser = async (userId) => {
+    return User.findById(userId);
+};
+
+/**
+ * Return a subset of information about the user which can be sent to the client.
+ * IMPORTANT: Sensitive information must not be sent to the client.
+ * @param userId
+ * @returns {Query}
+ */
 module.exports.getUserProfile = async (userId) => {
-    //TODO: Include information about the purchases
-    const userDetails = await User.findById(userId)
+    return User.findById(userId)
         .select({
             name: 1,
             email: 1,
-            purchases: 1,
+            'purchases.status': 1,
+            'purchases.user_instruction': 1,
+            'purchases.ever_expected': 1,
+            'purchases.currency': 1,
+            'purchases.amount_expected': 1,
             whitelist: 1,
-            kyc: 1,
-            idmStatus: 1,
-            kycDocs: 1,
+            isActive: 1,
             isAdmin: 1,
             isVerifier: 1,
-            isActive: 1,
+            kyc: 1,
             kycStatus: 1,
-            idmDetails:1
+            kycDocs: 1,
+            idmStatus: 1
         });
-    return userDetails;
-}
+};
+
+
+module.exports.getAggregates = async (userId) => {
+    //TODO: Implement computing the issued number of EVERs
+    return {
+        ever_amount: 123,
+        ever_bonus: 12,
+        ever_total: 143
+    };
+};
 
 module.exports.addKycDocuments = async (userId, document1Id, document2Id) => {
-    const userDetails = await User.findByIdAndUpdate(
+    await User.findByIdAndUpdate(
         userId,
         {
             "kycDocs.document1": document1Id,
             "kycDocs.document2": document2Id
         }
     )
-}
+};
 
 module.exports.storeIDMStatus = async (userId, idmStatus) => {
     console.log(`[storeIDMStatus] ${userId}: ${idmStatus}`);
