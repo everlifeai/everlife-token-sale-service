@@ -1,3 +1,4 @@
+const log = require('util').log;
 const router = require('express').Router();
 const uuidv4 = require('uuid/v4');
 const { StrKey } = require('stellar-sdk');
@@ -60,7 +61,7 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
                 if (StrKey.isValidEd25519PublicKey(source_ref)) {
                     sourceAccountOrInvoiceRef = source_ref;
                 } else {
-                    throw new UserError('The supplied source account is not valid, or missing')
+                    throw new UserError('The supplied source account is not valid, or missing', 400)
                 }
                 amount_expected = calculateXLMAmount(amount_expected_USD);
                 response = {
@@ -74,14 +75,19 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
                 amount_expected = invoice_info.amount;
                 response = {
                     pay_instruction: `Please click the purchase button below to complete the purchase.`,
-                    buyer_link: invoice_info.status_url
+                    payment_link: invoice_info.status_url
                 };
                 break;
             default:
                 throw new Error("Unknown payment system.")
         }
-        await accountRepo.storePurchase(userId, ever_amount, payment_system, currency, amount_expected, sourceAccountOrInvoiceRef, issue_to, invoice_info, response);
-        res.send(response);
+        try {
+            await accountRepo.storePurchase(userId, ever_amount, payment_system, currency, amount_expected, sourceAccountOrInvoiceRef, issue_to, invoice_info, response);
+            res.send(response);
+        } catch (e) {
+            log(e);
+            throw new UserError('Failed to register the purchase, unable to proceed at this time.', 400)
+        }
     } catch (error) {
         next(error);
     }
@@ -89,7 +95,7 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
 
 function checkDestinationAddress(address) {
     if (!StrKey.isValidEd25519PublicKey(address)) {
-        throw new UserError('The supplied destination account is not valid, or missing');
+        throw new UserError('The supplied destination account is not valid, or missing', 400);
     }
     //TODO: Validate address, it must be live and have trustline also (this we can probably check on the front end)
 }

@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node $NODE_DEBUG_OPTION ./bin/www",
-    "dev": "nodemon $NODE_DEBUG_OPTION ./bin/www"
+    "start": "node $NODE_DEBUG_OPTION ./src/bin/www",
+    "dev": "nodemon $NODE_DEBUG_OPTION ./src/bin/www"
   },
   "dependencies": {
     "aws-sdk": "^2.281.1",
@@ -14,7 +14,7 @@
     "cors": "^2.8.4",
     "debug": "~2.6.9",
     "dotenv": "^5.0.1",
-    "everlife-token-sale-model": "everlifeai/everlife-token-sale-model#1.0.0",
+    "everlife-token-sale-model": "everlifeai/everlife-token-sale-model#v1.0.2",
     "express": "~4.16.0",
     "http-errors": "~1.6.2",
     "joi": "^13.3.0",

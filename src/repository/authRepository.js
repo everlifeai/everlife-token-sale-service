@@ -1,4 +1,4 @@
-const { User } = require('everlife-token-sale-model');
+const { User } = require('../../../everlife-token-sale-model/src/index');
 
 module.exports.createUser = async function (user) {
     const newUser = new User(user);

@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const { UserError } = require('../errors/customErrors');
-const authService = require('./../services/authService');
+const authService = require('../services/authService');
 const captcha = require('../services/captcha');
 
 const authRepository = require('../repository/authRepository');

@@ -4,10 +4,10 @@
  * Module dependencies.
  */
 require('dotenv').config()
-var app = require('../app');
+var app = require('../../app');
 var debug = require('debug')('payment-service:server');
 var http = require('http');
-var model = require('everlife-token-sale-model');
+var model = require('../../../everlife-token-sale-model/src/index');
 
 const config = require('../config/config');
 

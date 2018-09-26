@@ -2,17 +2,17 @@ const createError = require('http-errors');
 const express = require('express');
 const logger = require('morgan');
 const cors = require('cors');
-const config = require('./config/config');
+const config = require('./src/config/config');
 
 const app = express();
 
 // Middlewares
-const authMiddleware = require('./middlewares/authMiddleware');
+const authMiddleware = require('./src/middlewares/authMiddleware');
 
 // Controllers
-const authController = require('./controllers/authController');
-const accountController = require('./controllers/accountController');
-const kycController = require('./controllers/kycController');
+const authController = require('./src/controllers/authController');
+const accountController = require('./src/controllers/accountController');
+const kycController = require('./src/controllers/kycController');
 
 /*   problem/
  * During development we need to see the request/responses
