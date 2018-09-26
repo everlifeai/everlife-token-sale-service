@@ -1,14 +1,11 @@
 const Joi = require('joi')
 
 const schema = Joi.object({
-    ASSET_CODE: Joi.string().required(),
-    ISSUING_PUBLIC: Joi.string().required(),
-    ISSUING_SECRET: Joi.string().required(),
-    DIST_PUBLIC: Joi.string().required(),
-    DIST_SECRET: Joi.string().required(),
-    STELLAR_ENV: Joi.string().required(),
-}).unknown()
-    .required()
+    STELLAR_ASSET_CODE: Joi.string().required(),
+    STELLAR_ASSET_ISSUER: Joi.string().required(),
+    STELLAR_PAYMENT_RECIPIENT: Joi.string().required(),
+    STELLAR_ENV: Joi.string().allow(['development', 'production']).required(),
+}).unknown().required();
 
 const { error, value: envVars } = Joi.validate(process.env, schema)
 
@@ -18,12 +15,10 @@ if (error) {
 
 const config = {
     assetCode: envVars.ASSET_CODE,
-    issuingPublic: envVars.ISSUING_PUBLIC,
-    issuingSecret: envVars.ISSUING_SECRET,
-    distPublic: envVars.DIST_PUBLIC,
-    distSecret: envVars.DIST_SECRET,
+    assetIssuer: envVars.STELLAR_ASSET_ISSUER,
+    paymentRecipient: envVars.STELLAR_PAYMENT_RECIPIENT,
     isDevelopment: envVars.STELLAR_ENV === 'development',
     isProduction: envVars.STELLAR_ENV === 'production',
-}
+};
 
 module.exports = config;

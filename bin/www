@@ -7,17 +7,16 @@ require('dotenv').config()
 var app = require('../app');
 var debug = require('debug')('payment-service:server');
 var http = require('http');
-var mongoose = require('mongoose');
+var model = require('everlife-token-sale-model');
 
 const config = require('../config/config');
 
-if (config.server.isDevelopment) {
-  mongoose.connect('mongodb://localhost:27017/stellerico');
-}
 
-if (config.server.isProduction) {
-  mongoose.connect(config.db.connectionString);
-}
+model.connectDb(config.db.connectionString, config.db.name, config.server.isDevelopment)
+    .catch(err => {
+        log(`Error connecting to database: ${config.db.connectionString}`, err);
+        process.exit(-1);
+    });
 
 /**
  * Get port from environment and store in Express.
