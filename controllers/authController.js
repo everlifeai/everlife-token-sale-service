@@ -4,7 +4,9 @@ const router = express.Router();
 const { UserError } = require('../errors/customErrors');
 const authService = require('./../services/authService');
 const captcha = require('../services/captcha');
+
 const authRepository = require('../repository/authRepository');
+const accountRepo = require('../repository/accountRepository')
 
 const bodyValidator = require('../middlewares/bodyValidator');
 const userRegisterSchema = require('../validators/userRegisterSchema');
@@ -31,44 +33,27 @@ router.post('/register', bodyValidator(userRegisterSchema), async (req, res, nex
 });
 
 router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => {
-    const { email, password, reCaptchaResponse } = req.body;
+    const { email, password } = req.body;
     try {
-        // const captchaStatus = await captcha.isCaptchaSuccess(reCaptchaResponse);
-        // if(!captchaStatus){
-        //     throw new UserError("Captcha invalid", 400);
-        // }
         const user = await authRepository.getUser(email);
         if (!user) {
             throw new UserError("User does not exist", 400);
         }
         if (await authService.comparePassword(password, user.password)) {
-            var accessToken = await getAccessToken(user);
-            var response = {
-                user: {
-                    name: user.name,
-                    email: user.email,
-                    kyc: user.kyc,
-                    whitelist: user.whitelist,
-                    kycDocs: user.kycDocs,
-                    idmStatus: user.idmStatus,
-                    contributions: user.contributions,
-                    isAdmin: user.isAdmin,
-                    isVerifier: user.isVerifier,
-                    isActive: user.isActive,
-                    kycStatus: user.kycStatus,
-                    idmDetails:user.idmDetails
-                },
+            const accessToken = await getAccessToken(user);
+            const userProfile = await accountRepo.getUserProfile(user.id);
+            const response = {
+                user: userProfile,
                 accessToken
-            }
+            };
+            res.send(response);
         }
         else {
             throw new UserError("Email or password do not match", 400);
         }
     } catch (error) {
         next(error);
-        return;
     }
-    res.send(response);
 });
 
 async function getAccessToken(user) {

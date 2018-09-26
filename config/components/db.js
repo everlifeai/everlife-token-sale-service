@@ -1,7 +1,8 @@
 const joi = require('joi')
 
 const schema = joi.object({
-    DB_CONNECTION_STRING: joi.string()
+    DB_CONNECTION_STRING: joi.string().required(),
+    DB_NAME: joi.string()
 }).unknown()
     .required()
 
@@ -12,7 +13,8 @@ if (error) {
 }
 
 const config = {
-    connectionString: envVars.DB_CONNECTION_STRING
-}
+    connectionString: envVars.DB_CONNECTION_STRING,
+    name: envVars.DB_NAME
+};
 
 module.exports = config;

@@ -1,14 +1,14 @@
 const Joi = require('joi')
 
+//TODO: Keep only payment destination account (pub) and GA pub (for trustline)
 const schema = Joi.object({
     ASSET_CODE: Joi.string().required(),
     ISSUING_PUBLIC: Joi.string().required(),
     ISSUING_SECRET: Joi.string().required(),
     DIST_PUBLIC: Joi.string().required(),
     DIST_SECRET: Joi.string().required(),
-    STELLAR_ENV: Joi.string().required(),
-}).unknown()
-    .required()
+    STELLAR_ENV: Joi.string().allow(['development', 'production']).required(),
+}).unknown().required();
 
 const { error, value: envVars } = Joi.validate(process.env, schema)
 
@@ -24,6 +24,6 @@ const config = {
     distSecret: envVars.DIST_SECRET,
     isDevelopment: envVars.STELLAR_ENV === 'development',
     isProduction: envVars.STELLAR_ENV === 'production',
-}
+};
 
 module.exports = config;

@@ -1,36 +1,21 @@
-const User = require('./../models/user');
+const { User } = require('everlife-token-sale-model');
 
 /*      outcome/
- * Save a new contribution into the user object and return the latest
- * contribution.
+ * Save a new purchase into the user object.
  */
-module.exports.storeContributionTrx = async (userId, XDR1, XDR2, XDR3, ca2, xlmAmount) => {
-    const user = await User.findByIdAndUpdate(
-        userId,
-        {
-            "$push": {
-                contributions: {
-                    xdr1: XDR1,
-                    xdr2: XDR2,
-                    xdr3: XDR3,
-                    ca2: ca2,
-                    xlmAmount: xlmAmount
-                }
-            }
-        },
-        {
-            new: true
-        }
-    )
-    return user;
-}
+module.exports.storePurchase = async (userId, ever_expected, payment_system, currency, amount_expected, source_ref, issue_to, invoice_info, user_instruction) => {
+    const user = await User.findById(userId);
+    user.addPurchase(ever_expected, payment_system, currency, amount_expected, source_ref, issue_to, invoice_info, user_instruction);
+    await user.save();
+};
 
 module.exports.getUserProfile = async (userId) => {
+    //TODO: Include information about the purchases
     const userDetails = await User.findById(userId)
         .select({
             name: 1,
             email: 1,
-            contributions: 1,
+            purchases: 1,
             whitelist: 1,
             kyc: 1,
             idmStatus: 1,
