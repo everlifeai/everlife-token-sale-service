@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "start": "node $NODE_DEBUG_OPTION ./bin/www",
-    "dev": "nodemon $NODE_DEBUG_OPTION ./bin/www"
+    "start": "node $NODE_DEBUG_OPTION ./src/bin/www",
+    "dev": "nodemon $NODE_DEBUG_OPTION ./src/bin/www"
   },
   "dependencies": {
     "aws-sdk": "^2.281.1",

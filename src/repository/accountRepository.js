@@ -1,4 +1,4 @@
-const { User } = require('everlife-token-sale-model');
+const { User } = require('../../../everlife-token-sale-model/src/index');
 
 /*      outcome/
  * Save a new purchase into the user object.
