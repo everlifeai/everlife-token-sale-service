@@ -29,6 +29,7 @@ module.exports.getUserProfile = async (userId) => {
             'purchases.ever_expected': 1,
             'purchases.currency': 1,
             'purchases.amount_expected': 1,
+            'purchases.createdAt': 1,
             whitelist: 1,
             isActive: 1,
             isAdmin: 1,
