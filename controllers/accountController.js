@@ -2,6 +2,7 @@ const router = require('express').Router();
 const uuidv4 = require('uuid/v4');
 const { StrKey } = require('stellar-sdk');
 
+const stellarConfig = require('../config/config').stellar;
 const bodyValidator = require('../middlewares/bodyValidator');
 const accountRepo = require('../repository/accountRepository');
 const purchaseSchema = require('../validators/purchaseSchema');
@@ -39,12 +40,18 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
 
     const payment_system = currencyToPaymentSystemMap.get(currency);
     const amount_expected_USD = ever_amount * EVERToUSDExcahangeRate;
+    const user = await accountRepo.getUser(userId);
 
     try {
         let sourceAccountOrInvoiceRef;
         let response;
         let invoice_info;
         let amount_expected;
+
+        // TODO: Implement check to make sure that KYC is passed.
+        // if (!user.kyc) {
+        //     throw new UserError('User has not passed KYC.')
+        // }
 
         checkDestinationAddress(issue_to);
 
@@ -57,13 +64,12 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
                 }
                 amount_expected = calculateXLMAmount(amount_expected_USD);
                 response = {
-                    pay_instruction: `Please pay ${amount_expected} XLM to account G123 to complete the purchase.`
+                    pay_instruction: `Please pay ${amount_expected} XLM to account \`${stellarConfig.paymentRecipient}\` to complete the purchase.`
                 };
                 break;
             case 'COINPAYMENTS':
-                const userProfile = await accountRepo.getUserProfile(userId);
                 const invoice_ref = uuidv4();
-                invoice_info = await coinPaymentsService.generateInvoice(amount_expected_USD, currency, invoice_ref, userProfile.name, userProfile.email);
+                invoice_info = await coinPaymentsService.generateInvoice(amount_expected_USD, currency, invoice_ref, user.name, user.email);
                 sourceAccountOrInvoiceRef = invoice_ref;
                 amount_expected = invoice_info.amount;
                 response = {
@@ -98,8 +104,12 @@ function calculateXLMAmount(amount_expected_USD) {
 router.get('/profile', async (req, res, next) => {
     const { id: userId } = req.user;
     try {
-        var userProfile = await accountRepo.getUserProfile(userId);
-        res.send({ user: userProfile });
+        const userProfile = await accountRepo.getUserProfile(userId);
+        const aggregates = await accountRepo.getAggregates(userId);
+        res.send({
+            user: userProfile,
+            aggregates: aggregates
+        });
     } catch (error) {
         next(error);
     }
