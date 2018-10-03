@@ -13,6 +13,8 @@ const authMiddleware = require('./middlewares/authMiddleware');
 const authController = require('./controllers/authController');
 const accountController = require('./controllers/accountController');
 const kycController = require('./controllers/kycController');
+const mailgunController = require('./controllers/mailgunController');
+
 
 /*   problem/
  * During development we need to see the request/responses
@@ -34,6 +36,7 @@ app.use('/api/account', accountController);
 app.use('/api/kyc', kycController);
 app.use('api/kyc/getUsers', kycController);
 app.use('api/kyc/kycStatus', kycController);
+app.use('/api/communicate', mailgunController);
 
 
 // catch 404 and forward to error handler
