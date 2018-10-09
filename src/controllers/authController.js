@@ -57,13 +57,16 @@ router.post('/login', bodyValidator(userLoginSchema), async (req, res, next) => 
 });
 
 async function getAccessToken(user) {
+    console.log('[getAccessToken]', user);
     const tokenData = {
         id: user._id,
         email: user.email,
         whitelist: user.whitelist,
         kyc: user.kyc,
         idmStatus: user.idmStatus,
-    }
+        isAdmin: user.isAdmin,
+        isVerifier: user.isVerifier
+    };
     const token = await authService.generateAccessToken(tokenData);
     return token;
 }

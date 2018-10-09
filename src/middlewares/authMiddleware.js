@@ -20,7 +20,9 @@ var verifyToken = function (req, res, next) {
         req.user = {
             id: verifiedToken.body.id,
             email: verifiedToken.body.email,
-        }
+            isAdmin: verifiedToken.body.isAdmin,
+            isVerifier: verifiedToken.body.isVerifier,
+        };
         next();
     }).catch(function (error) {
         res.status(401).send({

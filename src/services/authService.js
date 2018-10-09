@@ -1,14 +1,21 @@
 var nJwt = require('njwt');
 var bcrypt = require('bcrypt');
+var secureRandom = require('secure-random');
 
-var config = require('../config/config');
+
+/*      understand/
+ * We re-generate the token signing key on every restart to make sure it is protected. The only downside to this
+ * is that we need to re-login after service restarts.
+ */
+const tokenSigningKey = secureRandom(256, {type: 'Buffer'}); // Create a highly random byte array of 256 bytes
+
 
 /*      outcome/
  * Verify the client token generated using the secret signing key
  */
 module.exports.verifyToken = function (token) {
     return new Promise((resolve, reject) => {
-        nJwt.verify(token, config.token.secret, function (error, verifiedJwt) {
+        nJwt.verify(token, tokenSigningKey, function (error, verifiedJwt) {
             if (error) {
                 reject(error);
             }
@@ -24,7 +31,7 @@ module.exports.verifyToken = function (token) {
  */
 module.exports.generateAccessToken = function(data) {
     data.iss = "https://everlife.ai/";
-    var jwt = nJwt.create(data, config.token.secret);
+    var jwt = nJwt.create(data, tokenSigningKey);
     return jwt.compact();
 }
 
