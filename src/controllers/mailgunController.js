@@ -1,7 +1,6 @@
 const router = require('express').Router();
 
 const emailUtil = require('../services/mailgunService');
-const authRepository = require('../repository/authRepository');
 const { sendEmail } = emailUtil;
 
 /*
@@ -12,32 +11,18 @@ const { sendEmail } = emailUtil;
 */
 
 router.post('/mail', async (req, res, next) => {
-
-  const sendEmailUser = await authRepository.getUser(req.user.email);
-  if(sendEmailUser.isVerifier==true){
     const { recipient, message } = req.body;
     try {
+        if (!req.user.isVerifier) {
+            res.send(401);
+            return;
+        }
         await sendEmail(recipient, message);
         res.json({message: 'Your query has been sent'});
         await next();
        } catch (e) {
         await next(e);
      }
-  }else{
-      res.json({message: 'Permission Denined! Please check EverlifeAI to Enable Email Permissions'});
-      console.log('Permission Denined! Please check EverlifeAI to Enable Email Permissions');
-      return;
-      //await next({ "error": "User don not provided" });
-  }
-
  });
-
-
-
-
-
-
-
-
 
 module.exports = router;
