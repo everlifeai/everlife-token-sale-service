@@ -7,16 +7,16 @@ const stellarConfig = require('../config/config').stellar;
 const bodyValidator = require('../middlewares/bodyValidator');
 const accountRepo = require('../repository/accountRepository');
 const purchaseSchema = require('../validators/purchaseSchema');
-const coinPaymentsService = require('../services/coinPaymentsService')
+const coinPaymentsService = require('../services/coinPaymentsService');
+const coinMarketCapService = require('../services/coinmarketcapservice');
 const { UserError } = require('../errors/customErrors');
 
 const currencyToPaymentSystemMap = new Map([
-    ['XLM', 'STELLAR'],
-    ['BTC', 'COINPAYMENTS'],
-    ['ETH', 'COINPAYMENTS']]);
+    ['XLM', 'stellar'],
+    ['BTC', 'coinpayments'],
+    ['ETH', 'coinpayments']]);
 
 const EVERToUSDExcahangeRate = 0.1;
-const USDToXLMExchangeRate = 1 / 0.25; //TODO: Get real time updates from market.
 
 /**
  *      outcome/
@@ -57,18 +57,18 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
         checkDestinationAddress(issue_to);
 
         switch (payment_system) {
-            case 'STELLAR':
+            case 'stellar':
                 if (StrKey.isValidEd25519PublicKey(source_ref)) {
                     sourceAccountOrInvoiceRef = source_ref;
                 } else {
                     throw new UserError('The supplied source account is not valid, or missing', 400)
                 }
-                amount_expected = calculateXLMAmount(amount_expected_USD);
+                amount_expected = await calculateXLMAmount(amount_expected_USD);
                 response = {
                     pay_instruction: `Please pay ${amount_expected} XLM to account \`${stellarConfig.paymentRecipient}\` to complete the purchase.`
                 };
                 break;
-            case 'COINPAYMENTS':
+            case 'coinpayments':
                 const invoice_ref = uuidv4();
                 invoice_info = await coinPaymentsService.generateInvoice(amount_expected_USD, currency, invoice_ref, user.name, user.email);
                 sourceAccountOrInvoiceRef = invoice_ref;
@@ -100,8 +100,9 @@ function checkDestinationAddress(address) {
     //TODO: Validate address, it must be live and have trustline also (this we can probably check on the front end)
 }
 
-function calculateXLMAmount(amount_expected_USD) {
-    return amount_expected_USD * USDToXLMExchangeRate; //TODO: Get real time update from exchange
+async function calculateXLMAmount(amount_expected_USD) {
+    const rateXLMtoUSD = await coinMarketCapService.getXLMToUSDRate();
+    return amount_expected_USD / rateXLMtoUSD;
 }
 
 /**      outcome/

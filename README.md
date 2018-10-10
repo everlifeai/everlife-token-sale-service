@@ -49,8 +49,8 @@ IDM_PUB_KEY_FILE=../config/idmPublicKey.txt
 COINPAYMENTS_KEY=???
 COINPAYMENTS_SECRET=???
 
-# Application JWT Token secret
-TOKEN_SECRET=yqJhMPorrBRUhcY4XhX6f8eDBUembEBv
+# CoinMarketCap API KEY
+COINMARKETCAP_APIKEY=???
 ```
 
 ### Installing and running the service
