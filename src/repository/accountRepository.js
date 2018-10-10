@@ -20,34 +20,74 @@ module.exports.getUser = async (userId) => {
  * @returns {Query}
  */
 module.exports.getUserProfile = async (userId) => {
-    return User.findById(userId)
-        .select({
-            name: 1,
-            email: 1,
-            'purchases.status': 1,
-            'purchases.user_instruction': 1,
-            'purchases.ever_expected': 1,
-            'purchases.currency': 1,
-            'purchases.amount_expected': 1,
-            'purchases.createdAt': 1,
-            whitelist: 1,
-            isActive: 1,
-            isAdmin: 1,
-            isVerifier: 1,
-            kyc: 1,
-            kycStatus: 1,
-            kycDocs: 1,
-            idmStatus: 1
+
+    const user = await User.findById(userId);
+
+    let purchases = [];
+    user.purchases
+        .forEach(p => {
+
+            let ever_amount = 0,
+                ever_bonus = 0;
+
+            if (['ISSUED'].includes(p.status)) {
+                p.credited_payments.forEach(c => {
+                    ever_amount += c.ever;
+                    ever_bonus += c.ever_bonus;
+                });
+            }
+
+            purchases.push({
+                status: p.status,
+                user_instruction: p.user_instruction,
+                ever_expected: p.ever_expected,
+                currency: p.currency,
+                amount_expected: p.amount_expected,
+                createdAt: p.createdAt,
+                ever_amount: ever_amount,
+                ever_bonus: ever_bonus
+            });
         });
+
+
+    const profile = {
+        name: user.name,
+        email: user.email,
+        whitelist: user.whitelist,
+        isActive: user.isActive,
+        isAdmin: user.isAdmin,
+        isVerifier: user.isVerifier,
+        kyc: user.kyc,
+        kycStatus: user.kycStatus,
+        kycDocs: user.kycDocs,
+        idmStatus: user.idmStatus,
+        purchases: purchases
+    };
+    return profile;
+
 };
 
 
 module.exports.getAggregates = async (userId) => {
-    //TODO: Implement computing the issued number of EVERs
+
+    const user = await User.findById(userId);
+
+    let ever_amount = 0,
+        ever_bonus = 0;
+
+    user.purchases
+        .filter(p => ['ISSUED'].includes(p.status))
+        .forEach(p => {
+            p.credited_payments.forEach(c => {
+                ever_amount += c.ever;
+                ever_bonus += c.ever_bonus;
+            });
+        });
+
     return {
-        ever_amount: 123,
-        ever_bonus: 12,
-        ever_total: 143
+        ever_amount: ever_amount,
+        ever_bonus: ever_bonus,
+        ever_total: ever_amount+ever_bonus
     };
 };
 
