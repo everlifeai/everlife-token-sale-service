@@ -1,16 +1,28 @@
 const emailConfig = require('../config/config');
 const mailgun = require('mailgun-js')(emailConfig.mailgun);
+const pug = require('pug');
 
 module.exports.sendEmail = (recipient, message, attachment) =>
   new Promise((resolve, reject) => {
+
+    // Compile the pub Template
+    const compiledFunction = pug.compileFile(message.assetname);
+    // Render a set of data
+
+    const pugMessage = compiledFunction({
+      name: recipient.name
+    });
+
+    console.log("subject: "+message.subject);
+
+
     const data = {
-    //  from: 'Gobinda Thakur <info@mg.gobindathakur.com>',
       from: message.from,
-      to: recipient,
+      to: recipient.email,
       subject: message.subject,
-      text: message.text,
+      //text: "",
       inline: attachment,
-      html: message.html,
+      html: pugMessage,
     };
 
     mailgun.messages().send(data, function (error, body) {
