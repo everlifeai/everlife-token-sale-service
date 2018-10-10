@@ -49,10 +49,9 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
         let invoice_info;
         let amount_expected;
 
-        // TODO: Implement check to make sure that KYC is passed.
-        // if (!user.kyc) {
-        //     throw new UserError('User has not passed KYC.')
-        // }
+        if (user.kycStatus !== 'ACCEPT') {
+            throw new UserError('User has not passed KYC.', 400)
+        }
 
         checkDestinationAddress(issue_to);
 
@@ -97,7 +96,6 @@ function checkDestinationAddress(address) {
     if (!StrKey.isValidEd25519PublicKey(address)) {
         throw new UserError('The supplied destination account is not valid, or missing', 400);
     }
-    //TODO: Validate address, it must be live and have trustline also (this we can probably check on the front end)
 }
 
 async function calculateXLMAmount(amount_expected_USD) {
