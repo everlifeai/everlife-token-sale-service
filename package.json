@@ -1,5 +1,5 @@
 {
-  "name": "payment-service",
+  "name": "everlife-token-sale-service",
   "version": "1.1.1",
   "private": true,
   "scripts": {
