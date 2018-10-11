@@ -20,6 +20,6 @@ const config = {
     isDevelopment: envVars.NODE_ENV === 'development',
     isProduction: envVars.NODE_ENV === 'production',
     port: envVars.PORT
-}
+};
 
 module.exports = config;

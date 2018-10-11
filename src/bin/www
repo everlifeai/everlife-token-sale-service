@@ -4,20 +4,21 @@
  * Module dependencies.
  */
 require('dotenv').config()
-var app = require('../app');
-var debug = require('debug')('payment-service:server');
-var http = require('http');
-var mongoose = require('mongoose');
+const app = require('../../app');
+const debug = require('debug')('payment-service:server');
+const http = require('http');
+const model = require('everlife-token-sale-model');
+const coinMarketCapService = require('../services/coinmarketcapservice');
 
 const config = require('../config/config');
 
-if (config.server.isDevelopment) {
-  mongoose.connect('mongodb://localhost:27017/stellerico');
-}
+model.connectDb(config.db.connectionString, config.db.name, config.server.isDevelopment)
+    .catch(err => {
+        log(`Error connecting to database: ${config.db.connectionString}`, err);
+        process.exit(-1);
+    });
 
-if (config.server.isProduction) {
-  mongoose.connect(config.db.connectionString);
-}
+coinMarketCapService.startPollingCoinMarketCap();
 
 /**
  * Get port from environment and store in Express.

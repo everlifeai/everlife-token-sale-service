@@ -1,9 +1,6 @@
-//const emailConfig = require('./email-config')();
 const emailConfig = require('../config/config');
 const mailgun = require('mailgun-js')(emailConfig.mailgun);
 const pug = require('pug');
-
-
 
 module.exports.sendEmail = (recipient, message, attachment) =>
   new Promise((resolve, reject) => {

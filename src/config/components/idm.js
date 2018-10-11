@@ -1,7 +1,7 @@
 const joi = require('joi');
 
 const schema = joi.object({
-    IDM_PUB_KEY_FILE: joi.string()
+    IDM_PUB_KEY_FILE: joi.string().required()
 }).unknown()
     .required();
 
