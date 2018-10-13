@@ -70,7 +70,7 @@ router.post('/purchase', bodyValidator(purchaseSchema), async (req, res, next) =
             case 'coinpayments':
                 const invoice_ref = uuidv4();
                 invoice_info = await coinPaymentsService.generateInvoice(amount_expected_USD, currency, invoice_ref, user.name, user.email);
-                sourceAccountOrInvoiceRef = invoice_ref;
+                sourceAccountOrInvoiceRef = invoice_info.txn_id;
                 amount_expected = invoice_info.amount;
                 response = {
                     pay_instruction: `Please click the purchase button below to complete the purchase.`,
