@@ -100,7 +100,8 @@ function checkDestinationAddress(address) {
 
 async function calculateXLMAmount(amount_expected_USD) {
     const rateXLMtoUSD = await coinMarketCapService.getXLMToUSDRate();
-    return amount_expected_USD / rateXLMtoUSD;
+    const amountXLM = amount_expected_USD / rateXLMtoUSD;
+    return Number(amountXLM.toFixed(7));
 }
 
 /**      outcome/
