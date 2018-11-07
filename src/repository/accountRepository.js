@@ -61,7 +61,9 @@ module.exports.getUserProfile = async (userId) => {
         kycStatus: user.kycStatus,
         kycDocs: user.kycDocs,
         idmStatus: user.idmStatus,
-        purchases: purchases
+        purchases: purchases,
+        kycDetails: user.kycDetails,
+        address:user.address
     };
     return profile;
 
@@ -106,18 +108,20 @@ module.exports.storeIDMStatus = async (userId, idmStatus) => {
     await User.findByIdAndUpdate(
         userId,
         {
-            "idmStatus": idmStatus,
-            "kycStatus":"PENDING"
+            "idmStatus": idmStatus
         }
     );
 };
 
 module.exports.storeIDMDetails = async (userId, verifiedIdmResponse) => {
   console.log(`[storeIDMResponse] ${userId}: ${verifiedIdmResponse}`);
+
     await User.findByIdAndUpdate(
         userId,
         {
-            "idmDetails":verifiedIdmResponse
+            "idmDetails":verifiedIdmResponse,
+          //  "address":verifiedIdmAddress,
+            "kycStatus":"PENDING"
         }
     );
 };
@@ -136,7 +140,7 @@ module.exports.storeKycDocs = async (userId, document1, document2) => {
 };
 
 module.exports.getUserList = async function () {
-  return await User.find({isVerifier: false,isAdmin:false,kycStatus: "PENDING"}, function(err, user) {
+  return await User.find({isVerifier: false,isAdmin:false}, function(err, user) {
       if (err)
       {
           console.log(err);
