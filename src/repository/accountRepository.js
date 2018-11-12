@@ -113,14 +113,15 @@ module.exports.storeIDMStatus = async (userId, idmStatus) => {
     );
 };
 
-module.exports.storeIDMDetails = async (userId, verifiedIdmResponse) => {
+module.exports.storeIDMDetails = async (userId, verifiedIdmResponse, verifiedIdmAddress) => {
   console.log(`[storeIDMResponse] ${userId}: ${verifiedIdmResponse}`);
+  console.log(`[storeIDMResponseAddress]${userId}:${verifiedIdmAddress}`);
 
     await User.findByIdAndUpdate(
         userId,
         {
             "idmDetails":verifiedIdmResponse,
-          //  "address":verifiedIdmAddress,
+            "address":verifiedIdmAddress,
             "kycStatus":"PENDING"
         }
     );
@@ -155,6 +156,20 @@ module.exports.storeKycStatus = async (userId, kycStatus) => {
         userId,
         {
             "kycStatus":kycStatus
+        }
+    );
+};
+
+module.exports.storeKycInfo = async (userId, name, phone, address, kycStatus, kycDetails) => {
+  console.log(`[storeKycInfo] ${userId}: ${name}, ${phone}, ${address}, ${kycStatus}, ${kycDetails}`);
+    await User.findByIdAndUpdate(
+        userId,
+        {
+              "name":name,
+              "phone":phone,
+              "address":address,
+              "kycStatus":kycStatus,
+              "kycDetails":kycDetails
         }
     );
 };
