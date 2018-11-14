@@ -16,7 +16,8 @@ module.exports.sendEmail = (recipient, message, attachment) =>
         // Render a set of data
 
         const pugMessage = compiledFunction({
-            name: recipient.name
+            name: recipient.name,
+            kycDetails:recipient.kycDetails!=null?"Reason : "+recipient.kycDetails:null
         });
 
         log(`[sendEmail] subject: ${message.subject}`);
